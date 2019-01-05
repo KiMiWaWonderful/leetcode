@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.znbl.common.mapper.TopicMapper">
+    <resultMap id="TopicMapper" type="com.znbl.common.entity.Topic">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <!--<result column="category_name" property="category_name" jdbcType="VARCHAR" />-->
+        <!-- 指定联合查询出的category字段的封装 -->
+        <association property="category" javaType="com.znbl.common.entity.Category">
+            <result column="category_name" property="category_name"/>
+        </association>
+    </resultMap>
+
+    <!-- 创建新的辩题：addTopic -->
+    <insert id="addTopic" useGeneratedKeys="true" keyProperty="id" >
+        insert into tb_topic (title,content,c_id)
+        values
+        (#{title,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},#{c_id,jdbcType=INTEGER})
+    </insert>
+
+    <!-- 按照分类查看辩题：showByCategory -->
+    <select id="showByCategory" resultMap="TopicMapper">
+<!--
+        select
+        category_name,GROUP_CONCAT(title) title
+        from
+        tb_topic
+        GROUP BY
+        category_name
+ -->
+
+        select
+        t.id,t.title,c.category_name
+        from
+        tb_topic t
+        left join
+        tb_category c
+        on
+        t.c_id = c.id
+    </select>
+
+    <!-- 显示辩题详细信息：showTopic -->
+    <select id="getTopicById" resultMap="TopicMapper">
+        select
+        title,content
+        from
+        tb_topic
+        WHERE
+        id=#{id,jdbcType=INTEGER}
+    </select>
+
+</mapper>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.znbl.common.mapper.NegPlayerMapper">
+    <resultMap id="NegPlayerMapper" type="com.znbl.common.entity.NegPlayer">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="u_id" property="u_id" jdbcType="INTEGER" />
+        <result column="neg_id" property="neg_id" jdbcType="INTEGER" />
+        <result column="debate" property="debate" jdbcType="VARCHAR" />
+        <result column="question" property="question" jdbcType="VARCHAR" />
+        <result column="conclusion" property="conclusion" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!-- 增加反方选手 -->
+    <insert id="addNegPlayer" useGeneratedKeys="true" keyProperty="id" >
+        insert into
+        tb_negplayer (u_id)
+        values
+        (#{u_id,jdbcType=INTEGER})
+    </insert>
+
+    <!-- 统计反方的人数 -->
+    <select id="numsOfNegPlayer" resultType="java.lang.Integer">
+        select
+        COUNT (*) nums
+        from
+        tb_negplayer
+    </select>
+
+    <!-- 得到反方的集合 -->
+    <select id="listsOfNegPlayer" resultType="com.znbl.common.entity.NegPlayer">
+        select
+        *
+        from
+        tb_negplayer
+    </select>
+
+    <!-- 根据neg_id得到反方选手：getNegPlayer -->
+    <select id="getNegPlayer" resultType="com.znbl.common.entity.NegPlayer">
+        select
+        *
+        from
+        tb_negplayer
+        WHERE
+        neg_id=#{neg_id,jdbcType=INTEGER}
+    </select>
+
+    <!-- 反方选手发表Debate -->
+    <insert id="insertNegDebate"  >
+        insert into
+        tb_negplayer (debate)
+        values
+        (#{debate,jdbcType=VARCHAR})
+        WHERE
+        neg_id=#{neg_id,jdbcType=INTEGER}
+    </insert>
+
+    <!-- 反方选手发表Question -->
+    <insert id="insertNegQuestion"  >
+        insert into
+        tb_negplayer (question)
+        values
+        (#{question,jdbcType=VARCHAR})
+        WHERE
+        neg_id=#{neg_id,jdbcType=INTEGER}
+    </insert>
+
+    <!-- 反方选手发表Conclusion -->
+    <insert id="insertNegConclusion"  >
+        insert into
+        tb_negplayer (conclusion)
+        values
+        (#{conclusion,jdbcType=VARCHAR})
+        WHERE
+        neg_id=#{neg_id,jdbcType=INTEGER}
+    </insert>
+
+    <!-- 比赛结束后清空表中所有数据：deleteAll -->
+    <delete id="deleteAll">
+        delete from tb_negplayer
+    </delete>
+</mapper>

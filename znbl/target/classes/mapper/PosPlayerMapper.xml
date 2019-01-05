@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.znbl.common.mapper.PosPlayerMapper">
+    <resultMap id="PosPlayerMapper" type="com.znbl.common.entity.PosPlayer">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="u_id" property="u_id" jdbcType="INTEGER" />
+        <result column="pos_id" property="pos_id" jdbcType="INTEGER" />
+        <result column="debate" property="debate" jdbcType="VARCHAR" />
+        <result column="question" property="question" jdbcType="VARCHAR" />
+        <result column="conclusion" property="conclusion" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!-- 增加正方选手 -->
+    <insert id="addPosPlayer" useGeneratedKeys="true" keyProperty="id" >
+        insert into
+        tb_posplayer (u_id)
+        values
+        (#{u_id,jdbcType=INTEGER})
+    </insert>
+
+    <!-- 统计正方的人数 -->
+    <select id="numsOfPosPlayer" resultType="java.lang.Integer">
+        select
+        COUNT (*) nums
+        from
+        tb_posplayer
+    </select>
+
+    <!-- 得到正方的集合 -->
+    <select id="listsOfPosPlayer" resultType="com.znbl.common.entity.PosPlayer">
+        select
+        *
+        from
+        tb_posplayer
+    </select>
+
+    <!-- 根据pos_id得到正方选手：getPosPlayer -->
+    <select id="getPosPlayer" resultType="com.znbl.common.entity.PosPlayer">
+        select
+        *
+        from
+        tb_posplayer
+        WHERE
+        pos_id=#{pos_id,jdbcType=INTEGER}
+    </select>
+
+    <!-- 正方选手发表Debate -->
+    <insert id="insertPosDebate"  >
+        insert into
+        tb_posplayer (debate)
+        values
+        (#{debate,jdbcType=VARCHAR})
+        WHERE
+        pos_id=#{pos_id,jdbcType=INTEGER}
+    </insert>
+
+    <!-- 正方选手发表Question -->
+    <insert id="insertPosQuestion"  >
+        insert into
+        tb_posplayer (question)
+        values
+        (#{question,jdbcType=VARCHAR})
+        WHERE
+        pos_id=#{pos_id,jdbcType=INTEGER}
+    </insert>
+
+    <!-- 正方选手发表Conclusion -->
+    <insert id="insertPosConclusion"  >
+        insert into
+        tb_posplayer (conclusion)
+        values
+        (#{conclusion,jdbcType=VARCHAR})
+        WHERE
+        pos_id=#{pos_id,jdbcType=INTEGER}
+    </insert>
+
+    <!-- 比赛结束后清空表中所有数据：deleteAll -->
+    <delete id="deleteAll">
+        delete from tb_posplayer
+    </delete>
+</mapper>
